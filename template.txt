@@ -1,0 +1,89 @@
+Robin Lemanska                                            <Month> <Year>
+
+
+                      <Document Title  (centered)>
+
+Notices
+
+   Copyright (c) <Year> Robin Lemanska
+
+   Permission is granted to copy and distribute this document for any
+   purpose and without charge, including translations into other
+   languages and incorporation into compilations, provided that the
+   copyright notice and this notice are preserved, and that any
+   substantive changes or deletions from the original are clearly
+   marked.
+
+Abstract
+
+   This specification defines ... <short summary>
+
+Table of Contents
+
+   1. Introduction ................................................... #
+      1.1. Purpose ................................................... #
+      1.2. Intended audience ......................................... #
+      1.3. <...> ..................................................... #
+      1.4. Changes from previous versions ............................ #
+   2. Detailed specification ......................................... #
+      2.1. Overall conventions ....................................... #
+      2.2. Data format ............................................... #
+      2.3. <...> ..................................................... #
+   3. <...> .......................................................... #
+      3.1. <...> ..................................................... #
+   4. References ..................................................... #
+   5. Appendix: <...> ................................................ #
+
+1. General
+
+   1.1. Purpose
+
+      The purpose of this specification is to define <...>
+
+   1.2. Intended audience
+   
+      This specification is intended for use by implementors of software
+      to <...>
+
+      The text of the specification assumes a basic background in
+      programming at the level of bits and other primitive data
+      representations.
+
+   1.3. <...>
+
+      <...>
+
+   1.4. Changes from previous versions
+
+      <...>
+
+2. Detailed specification
+
+   2.1. Overall conventions
+
+      <conventions like byte = 8 bits, bit numbering, byte order, ...>
+
+   2.2. Data format
+
+      <detailed data format specification>
+
+   2.3. <...>
+
+      <...>
+
+3. <...>
+
+   3.1. <...>
+
+      <...>
+
+4. References
+
+   [1] <Reference/Example> implementation, available at
+       https://rle.sh/git/<RepoName>
+   
+   [2] <...>
+
+5. Appendix: <...>
+
+   <...>
