@@ -13,6 +13,9 @@ Notices
    copyright notice and this notice are preserved, and that any
    substantive changes or deletions from the original are clearly
    marked.
+   
+   This specification can be found found online at the URL
+   <https://rle.sh/git-file/Specifications/<...>>.
 
 Abstract
 
