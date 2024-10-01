@@ -37,7 +37,9 @@ Table of Contents
    4. <...> .......................................................... #
       4.1. <...> ..................................................... #
    5. References ..................................................... #
-   6. Appendix: <...> ................................................ #
+   6. Source code .................................................... #
+   7. Acknowledgements ............................................... #
+   8. Appendix: <...> ................................................ #
 
 1. General
 
@@ -96,11 +98,20 @@ Table of Contents
 
 5. References
 
-   [1] <Reference/Example> implementation, available at
-       https://rle.sh/git/<RepoName>
-   
-   [2] <...>
+   [1] <...>
 
-6. Appendix: <...>
+6. Source code
+
+   Source code for a <C/C++> language implementation of <...> is
+   available at https://rle.sh/git-repo/<RepoName>.
+
+7. Acknowledgements
+
+   Trademarks cited in this document are the property of their
+   respective owners.
+
+   <... designed/wrote software/... ...>
+
+8. Appendix: <...>
 
    <...>
