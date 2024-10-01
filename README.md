@@ -29,6 +29,16 @@ The file `template.txt` can be used as a template for new specification
 files.
 
 
+## Versioning
+
+At the deepest level, all specification directories contain files with
+the naming scheme `vX.Y.txt`, where `X` and `Y` are integers.
+
+Since I reserve the right to change these specification files after the
+initial release, these version numbers refer to the version of the file
+type, not the version of the specification.
+
+
 ## Modification Policy
 
 I reserve the right to change specifications after I initially released
