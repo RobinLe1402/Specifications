@@ -1,3 +1,7 @@
+<NOTE: This is a work-in-progress specification. Links might be invalid
+and the technical details might change drastically without notice. Don't
+reference this specification yet.>
+
 Robin Lemanska                                            <Month> <Year>
 
 
