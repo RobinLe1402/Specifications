@@ -64,7 +64,7 @@ Table of Contents
          * is extensible by defining new chunk types.
 
    1.2. Intended audience
-   
+
       This specification is intended for use by implementors of software
       that displays text that might get translated into other languages.
 
@@ -193,11 +193,11 @@ Table of Contents
 
          Right after the file header, the critical chunks must appear
          in this order:
-         
+
             * "hdr "
             * "str "
             * "data"
-         
+
          All the optional chunks follow. The only limitation in the
          order of the optional chunk is that the "astr" chunk must come
          before any other optional chunk.
@@ -209,7 +209,7 @@ Table of Contents
 4. References
 
    [1] <...>
-   
+
    <TODO: add references, like the UTF-8 specification at
    https://datatracker.ietf.org/doc/html/rfc3629>
 
