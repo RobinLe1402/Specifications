@@ -81,11 +81,18 @@ Table of Contents
       String: A sequence of bytes that can be decoded into text
       characters.
 
+      Main string: A string defined in the "str " chunk, see section
+      3.2.1 for details.
+
+      Tag: A short text that can be used to categorize a main string,
+      like "dialogue" for character dialogue in a video game or "menu"
+      for the label of a menu button.
+
       Chunk: A sequence of bytes grouped into a larger unit, preceded by
       a header.
 
-      0xH: Hexadecimal representation of a binary value, where H is a
-      sequence of one or more hexadecimal digits.
+      0xHH: Hexadecimal representation of a binary value, where HH is a
+      sequence of two or more hexadecimal digits.
       Pairs of two hexadecimal digits (= bytes) might be divided by a
       single quote (').
 
@@ -126,10 +133,6 @@ Table of Contents
          alongside the main software, while critical chunks contain the
          main data and must be part of a valid rlLang file.
 
-         Some optional chunks are called "translation chunks". These are
-         intended to be used for translating the main texts. However,
-         they can also be used for other causes.
-
          Some optional chunks might be critical to other optional chunks
          and may hence be required once a different optional chunk type
          is included in the file.
@@ -137,37 +140,54 @@ Table of Contents
          The "hdr " (hex: 68 64 72 20) critical header chunk contains
          general information about the other critical chunks.
 
-         The "str " (hex: 73 74 72 20) critical string chunk contains
-         all the main text strings.
-         
          The "data" (hex: 64 61 74 61) critical data chunk contains
          references to the main strings. The order of the references
          implies a zero-based index that is used to identify a text.
          Multiple indexes can point to the same string, but a single
          index only points to a single string.
 
-         The "tstr" (hex: 74 73 74 72) optional translation chunk
-         contains additional strings for the other translation chunks.
-         It's required once there's a "tdir", a "ttag", a "tnam" or a
-         "tnot" chunk present.
+         The "str " (hex: 73 74 72 20) critical string chunk contains
+         all the main text strings that were or may get translated.
 
-         The "tdir" (hex: 74 64 69 72) optional translation directory
-         chunk contains a directory-like structure that the texts can be
-         sorted into. One text can be sorted into multiple directories.
+         The "astr" (hex: 61 73 74 72) optional additional string chunk
+         contains additional strings for the other optional chunks. It's
+         good practice to only save additional strings that are actually
+         referenced at least once in the file. This chunk is required
+         when at least one of the following chunk types are present:
+         "cstm", "dir ", "id  ", "note", "odat", "tag ".
 
-         The "ttag" (hex: 74 74 61 67) optional translation tag chunk
-         contains definitions of tags that can be added to multiple
-         texts.
+         The "cstm" (hex: 63 73 74 6D) optional custom data chunk
+         contains custom string properties for main strings. These can
+         be freely defined and are identified by their own unique
+         identifier strings, called "property identifier".
+         This chunk is special in that it's currently the only chunk
+         type that may appear in multiple chunks within a single file.
+         A single "cstm" chunk always defines a single custom property
+         and also contains the references to all associated values.
 
-         The "tnam" (hex: 74 6E 61 6D) optional translation name chunk
-         contains names for texts. Names can be given to as many texts
-         as required, some texts can stay unnamed while others are
-         named. And even though it's recommended to only use each name
-         once within a single directory, there's no technical limitation
-         to how often a given name is used for texts.
-         
-         The "tnot" (hex: 74 6E 6F 74) optional translation note chunk
-         contains notes for the translator for given texts.
+         The "dir " (hex: 64 69 72 20) optional directory chunk contains
+         a directory-like structure that the main strings can be sorted
+         into. If this chunk is present, it must assign a directory as
+         well as a name unique within this directory to each of the main
+         strings.
+
+         The "id  " (hex: 69 64 20 20) optional ID string chunk contains
+         assignments of ID strings for main strings. The same ID string
+         cannot be associated with multiple main strings.
+
+         The "note" (hex: 6E 6F 74 65) optional note chunk contains
+         definitions and assignments of notes for main strings. Each
+         main string can have zero or more notes assigned, and each note
+         can be assigned to zero or more main strings.
+
+         The "odat" (hex: 6F 64 61 74) optional original data chunk
+         contains original, untranslated texts that can be used for
+         creating a new translation.
+
+         The "tag " (hex: 74 61 67 20) optional tag chunk contains
+         definitions and assignments of tags for main strings. Each main
+         string can have zero or more tags assigned, and each tag can be
+         assigned to zero or more main strings.
 
       3.2.2. Chunk order
 
@@ -179,8 +199,8 @@ Table of Contents
             * "data"
          
          All the optional chunks follow. The only limitation in the
-         order of the optional chunk is that the "tstr" chunk must come
-         before any other translation chunk.
+         order of the optional chunk is that the "astr" chunk must come
+         before any other optional chunk.
 
    3.3. Data format
 
