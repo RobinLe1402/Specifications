@@ -44,8 +44,8 @@ Table of Contents
          3.3.1. File header .......................................... #
          3.3.2. Chunk header ......................................... #
          3.3.3. "hdr " chunk ......................................... #
-         3.3.4. "data" chunk ......................................... #
-         3.3.5. "str " chunk ......................................... #
+         3.3.4. "str " chunk ......................................... #
+         3.3.5. "data" chunk ......................................... #
          3.3.6. "astr" chunk ......................................... #
          3.3.7. "cstm" chunk ......................................... #
          3.3.8. "dir " chunk ......................................... #
@@ -94,7 +94,7 @@ Table of Contents
       characters.
 
       Main string: A string defined in the "str " chunk, see section
-      3.3.5 for details.
+      3.1.1 and 3.3.4 for details.
 
       Tag: A short text that can be used to categorize a main string,
       like "dialogue" for character dialogue in a video game or "menu"
@@ -148,14 +148,14 @@ Table of Contents
          The "hdr " (0x68 0x64 0x72 0x20) critical header chunk contains
          general information about the other critical chunks.
 
+         The "str " (0x73 0x74 0x72 0x20) critical string chunk contains
+         all the main text strings that were or may get translated.
+
          The "data" (0x64 0x61 0x74 0x61) critical data chunk contains
          references to the main strings. The order of the references
          implies a zero-based index that is used to identify a text.
          Multiple indexes can point to the same string, but a single
          index only points to a single string.
-
-         The "str " (0x73 0x74 0x72 0x20) critical string chunk contains
-         all the main text strings that were or may get translated.
 
          The "astr" (0x61 0x73 0x74 0x72) optional additional string
          chunk contains additional strings for the other optional
@@ -296,18 +296,7 @@ Table of Contents
            uint64_t iCount;   // the count of main texts.
          } rl_lang_chunktype_hdr;
 
-      3.3.4. "data" chunk
-
-         typedef struct
-         {
-           rl_lang_chunkheader oHeader; // the chunk header.
-
-           uint64_t iStringPtrs[]; // pointers to the main strings.
-                                   // the size of this array is
-                                   // defined in the "hdr " chunk.
-         } rl_lang_chunktype_data;
-
-      3.3.5. "str " chunk
+      3.3.4. "str " chunk
 
          typedef struct
          {
@@ -317,6 +306,17 @@ Table of Contents
                                // strings. the same string shall not
                                // appear more than once.
          } rl_lang_chunktype_str;
+
+      3.3.5. "data" chunk
+
+         typedef struct
+         {
+           rl_lang_chunkheader oHeader; // the chunk header.
+
+           uint64_t iStringPtrs[]; // pointers to the main strings.
+                                   // the size of this array is
+                                   // defined in the "hdr " chunk.
+         } rl_lang_chunktype_data;
 
       3.3.6. "astr" chunk
 
