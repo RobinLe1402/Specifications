@@ -42,16 +42,17 @@ Table of Contents
          3.2.2. Chunk order .......................................... #
       3.3. Data format ............................................... #
          3.3.1. File header .......................................... #
-         3.3.2. "hdr " chunk ......................................... #
-         3.3.3. "data" chunk ......................................... #
-         3.3.4. "str " chunk ......................................... #
-         3.3.5. "astr" chunk ......................................... #
-         3.3.6. "cstm" chunk ......................................... #
-         3.3.7. "dir " chunk ......................................... #
-         3.3.8. "id  " chunk ......................................... #
-         3.3.9. "note" chunk ......................................... #
-         3.3.10. "odat" chunk ........................................ #
-         3.3.11. "tag " chunk ........................................ #
+         3.3.2. Chunk header ......................................... #
+         3.3.3. "hdr " chunk ......................................... #
+         3.3.4. "data" chunk ......................................... #
+         3.3.5. "str " chunk ......................................... #
+         3.3.6. "astr" chunk ......................................... #
+         3.3.7. "cstm" chunk ......................................... #
+         3.3.8. "dir " chunk ......................................... #
+         3.3.9. "id  " chunk ......................................... #
+         3.3.10. "note" chunk ........................................ #
+         3.3.11. "odat" chunk ........................................ #
+         3.3.12. "tag " chunk ........................................ #
    4. References ..................................................... #
    5. Source code .................................................... #
    6. Acknowledgements ............................................... #
@@ -201,6 +202,18 @@ Table of Contents
          string can have zero or more tags assigned, and each tag can be
          assigned to zero or more main strings.
 
+         Strings are referenced via integers. These integers are the
+         offset, in bytes, of the strings within their respective
+         chunks. String references in the "data" chunk, point to the
+         "str " chunk while in all optional chunks, the references point
+         to the "astr" chunk. The reference point is right after the
+         chunk header, meaning that the first stored string always has
+         offset 0 and is therefore referenced by the value 0. Strings
+         can only ever be referenced by their first character. The
+         references can not be modified into being references to
+         substrings starting at a later character than the original
+         string.
+
       3.2.2. Chunk order
 
          Right after the file header, the critical chunks must appear
@@ -236,47 +249,95 @@ Table of Contents
          // sizeof(uint64_t) + sizeof(uint8_t) which in this case equals
          //        8         +        1        = 9
 
+      Multibyte values are saved in little endian, meaning that the most
+      significant byte is the first to be written to/read from a file.
+      The 32-bit value 0x01234567, for example, would be represented by:
+
+         0x67 0x45 0x23 0x01
+
+      For better readability, if a single chunk is made up of multiple
+      structs, the "main struct" is always presented first; even though
+      this would result in invalid C code, as structs must be declared
+      before they're first used.
+
       3.3.1. File header
 
+         struct rl_lang_filehdr
+         {
+           char     sMagicNo[6]; // "rlLang"
+           uint8_t  iVersion[2]; // file format version: 0x01 0x00
+           uint64_t iFileSize;   // the total size of the file,
+                                 // including this header, in bytes.
+         };
+
+      3.3.2. Chunk header
+
+         struct rl_lang_chunkheader
+         {
+           char     sChunkType[4]; // the chunk type identifier.
+           uint64_t iChunkSize;    // the size of the chunk, in bytes,
+                                   // excluding this header.
+         };
+
+      3.3.3. "hdr " chunk
+
+         struct rl_lang_chunktype_hdr
+         {
+           struct rl_lang_chunkheader oHeader; // the chunk header.
+
+           char     sLang[2]; // ISO 639-1 language code, like "en" for
+                              // english or "de" for german. See
+                              // reference [2].
+           uint64_t iCount;   // the count of main texts.
+         };
+
+      3.3.4. "data" chunk
+
+         struct rl_lang_chunktype_data
+         {
+           struct rl_lang_chunkheader oHeader; // the chunk header.
+
+           uint64_t iStringPtrs[]; // pointers to the main strings.
+                                   // the size of this array is
+                                   // defined in the "hdr " chunk.
+         };
+
+      3.3.5. "str " chunk
+
+         struct rl_lang_chunktype_str
+         {
+           struct rl_lang_chunkheader oHeader; // the chunk header.
+
+           char szStrings[][]; // a series of zero-terminated UTF-8
+                               // strings. the same string shall not
+                               // appear more than once.
+         };
+
+      3.3.6. "astr" chunk
+
+         // same as the "str " chunk.
+
+      3.3.7. "cstm" chunk
+
          <...>
 
-      3.3.2. "hdr " chunk
+      3.3.8. "dir " chunk
 
          <...>
 
-      3.3.3. "data" chunk
+      3.3.9. "id  " chunk
 
          <...>
 
-      3.3.4. "str " chunk
+      3.3.10. "note" chunk
 
          <...>
 
-      3.3.5. "astr" chunk
+      3.3.11. "odat" chunk
 
          <...>
 
-      3.3.6. "cstm" chunk
-
-         <...>
-
-      3.3.7. "dir " chunk
-
-         <...>
-
-      3.3.8. "id  " chunk
-
-         <...>
-
-      3.3.9. "note" chunk
-
-         <...>
-
-      3.3.10. "odat" chunk
-
-         <...>
-
-      3.3.11. "tag " chunk
+      3.3.12. "tag " chunk
 
          <...>
 
@@ -287,6 +348,9 @@ Table of Contents
        ISO 10646" (RFC 2629), available at
        https://datatracker.ietf.org/doc/html/rfc3629 (as HTML) and
        https://www.ietf.org/rfc/rfc3629.txt (as raw ASCII)
+   [2] Library of Congress, "Codes for the Representation of Names of
+       Languages", available at
+       https://www.loc.gov/standards/iso639-2/php/code_list.php
 
 5. Source code
 
