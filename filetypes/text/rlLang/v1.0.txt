@@ -234,7 +234,7 @@ Table of Contents
          struct teststruct { uint64_t a; uint8_t b; };
          // sizeof(struct teststruct) must be equal to
          // sizeof(uint64_t) + sizeof(uint8_t) which in this case equals
-         //        8         +        1        = 9k
+         //        8         +        1        = 9
 
       3.3.1. File header
 
