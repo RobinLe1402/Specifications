@@ -94,7 +94,7 @@ Table of Contents
       characters.
 
       Main string: A string defined in the "str " chunk, see section
-      3.2.1 for details.
+      3.3.5 for details.
 
       Tag: A short text that can be used to categorize a main string,
       like "dialogue" for character dialogue in a video game or "menu"
@@ -117,7 +117,7 @@ Table of Contents
    format.
 
    Part of the chunk order is specified and cannot be changed, but some
-   chunks may appear in any order. See Chapter 3 for details on the
+   chunks may appear in any order. See section 3.1.2 for details on the
    chunk order.
 
 3. Detailed specification
