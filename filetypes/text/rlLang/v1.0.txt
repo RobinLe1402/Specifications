@@ -36,10 +36,10 @@ Table of Contents
       1.3. Definitions of terms and conventions used ................. #
    2. File layout overview ........................................... #
    3. Detailed specification ......................................... #
-      3.1. Overall conventions ....................................... #
-      3.2. Chunks .................................................... #
-         3.2.1. Chunk types .......................................... #
-         3.2.2. Chunk order .......................................... #
+      3.1. Chunks .................................................... #
+         3.1.1. Chunk types .......................................... #
+         3.1.2. Chunk order .......................................... #
+      3.2. String references ......................................... #
       3.3. Data format ............................................... #
          3.3.1. File header .......................................... #
          3.3.2. Chunk header ......................................... #
@@ -122,18 +122,14 @@ Table of Contents
 
 3. Detailed specification
 
-   3.1. Overall conventions
-
-      <...>
-
-   3.2. Chunks
+   3.1. Chunks
 
       This section contains general information about chunks.
 
       For detailed definitions of the chunk header and the different
       chunk types, see section 3.3.
 
-      3.2.1. Chunk types
+      3.1.1. Chunk types
 
          The chunk header contains a four-character chunk type
          identifier. These chunk type identifiers are unique for each
@@ -208,19 +204,7 @@ Table of Contents
          string can have zero or more tags assigned, and each tag can be
          assigned to zero or more main strings.
 
-         Strings are referenced via integers. These integers are the
-         offset, in bytes, of the strings within their respective
-         chunks. String references in the "data" chunk, point to the
-         "str " chunk while in all optional chunks, the references point
-         to the "astr" chunk. The reference point is right after the
-         chunk header, meaning that the first stored string always has
-         offset 0 and is therefore referenced by the value 0. Strings
-         can only ever be referenced by their first character. The
-         references can not be modified into being references to
-         substrings starting at a later character than the original
-         string.
-
-      3.2.2. Chunk order
+      3.1.2. Chunk order
 
          Right after the file header, the critical chunks must appear
          in this order:
@@ -232,6 +216,21 @@ Table of Contents
          All the optional chunks follow. The only limitation in the
          order of the optional chunk is that the "astr" chunk must come
          before any other optional chunk.
+
+   3.2. String references
+
+         Strings are referenced via integers. These integers are the
+         offset, in bytes, of the strings within their respective
+         chunks. String references in the "data" chunk, point to the
+         "str " chunk while in all optional chunks, the references point
+         to the "astr" chunk. The reference point is right after the
+         chunk header, meaning that the first stored string always has
+         offset 0 and is therefore referenced by the value 0.
+
+         Strings can only ever be referenced by their first character.
+         The references can not be modified into being references to
+         substrings starting at a later character than the original
+         string.
 
    3.3. Data format
 
