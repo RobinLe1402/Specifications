@@ -56,7 +56,6 @@ Table of Contents
    4. References ..................................................... #
    5. Source code .................................................... #
    6. Acknowledgements ............................................... #
-   7. Appendix: <...> ................................................ #
 
 1. General
 
@@ -453,8 +452,4 @@ Table of Contents
    Trademarks cited in this document are the property of their
    respective owners.
 
-   <... designed/wrote software/... ...>
-
-7. Appendix: <...>
-
-   <...>
+   Robin Lemanska designed the rlLang file format.
