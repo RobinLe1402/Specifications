@@ -81,7 +81,8 @@ Table of Contents
 
       The text of the specification assumes a basic background in
       programming at the level of bits and other primitive data
-      representations.
+      representations, as well as a general understanding of the basic
+      syntax of the C programming language.
 
    1.3. Definitions of terms and conventions used
 
@@ -148,26 +149,26 @@ Table of Contents
          and may hence be required once a different optional chunk type
          is included in the file.
 
-         The "hdr " (hex: 68 64 72 20) critical header chunk contains
+         The "hdr " (0x68 0x64 0x72 0x20) critical header chunk contains
          general information about the other critical chunks.
 
-         The "data" (hex: 64 61 74 61) critical data chunk contains
+         The "data" (0x64 0x61 0x74 0x61) critical data chunk contains
          references to the main strings. The order of the references
          implies a zero-based index that is used to identify a text.
          Multiple indexes can point to the same string, but a single
          index only points to a single string.
 
-         The "str " (hex: 73 74 72 20) critical string chunk contains
+         The "str " (0x73 0x74 0x72 0x20) critical string chunk contains
          all the main text strings that were or may get translated.
 
-         The "astr" (hex: 61 73 74 72) optional additional string chunk
-         contains additional strings for the other optional chunks. It's
-         good practice to only save additional strings that are actually
-         referenced at least once in the file. This chunk is required
-         when at least one of the following chunk types are present:
-         "cstm", "dir ", "id  ", "note", "odat", "tag ".
+         The "astr" (0x61 0x73 0x74 0x72) optional additional string
+         chunk contains additional strings for the other optional
+         chunks. It's good practice to only save additional strings that
+         are actually referenced at least once in the file. This chunk
+         is required when at least one of the following chunk types are
+         present: "cstm", "dir ", "id  ", "note", "odat", "tag ".
 
-         The "cstm" (hex: 63 73 74 6D) optional custom data chunk
+         The "cstm" (0x63 0x73 0x74 0x6D) optional custom data chunk
          contains custom string properties for main strings. These can
          be freely defined and are identified by their own unique
          identifier strings, called "property identifier".
@@ -176,26 +177,26 @@ Table of Contents
          A single "cstm" chunk always defines a single custom property
          and also contains the references to all associated values.
 
-         The "dir " (hex: 64 69 72 20) optional directory chunk contains
-         a directory-like structure that the main strings can be sorted
-         into. If this chunk is present, it must assign a directory as
-         well as a name unique within this directory to each of the main
-         strings.
+         The "dir " (0x64 0x69 0x72 0x20) optional directory chunk
+         contains a directory-like structure that the main strings can
+         be sorted into. If this chunk is present, it must assign a
+         directory as well as a name unique within this directory to
+         each of the main strings.
 
-         The "id  " (hex: 69 64 20 20) optional ID string chunk contains
-         assignments of ID strings for main strings. The same ID string
-         cannot be associated with multiple main strings.
+         The "id  " (0x69 0x64 0x20 0x20) optional ID string chunk
+         contains assignments of ID strings for main strings. The same
+         ID string cannot be associated with multiple main strings.
 
-         The "note" (hex: 6E 6F 74 65) optional note chunk contains
+         The "note" (0x6E 0x6F 0x74 0x65) optional note chunk contains
          definitions and assignments of notes for main strings. Each
          main string can have zero or more notes assigned, and each note
          can be assigned to zero or more main strings.
 
-         The "odat" (hex: 6F 64 61 74) optional original data chunk
+         The "odat" (0x6F 0x64 0x61 0x74) optional original data chunk
          contains original, untranslated texts that can be used for
          creating a new translation.
 
-         The "tag " (hex: 74 61 67 20) optional tag chunk contains
+         The "tag " (0x74 0x61 0x67 0x20) optional tag chunk contains
          definitions and assignments of tags for main strings. Each main
          string can have zero or more tags assigned, and each tag can be
          assigned to zero or more main strings.
@@ -214,6 +215,26 @@ Table of Contents
          before any other optional chunk.
 
    3.3. Data format
+
+      In the following sections, structs from the C language will be
+      used to illustrate data structures. The following types are used:
+
+         char        A single byte representing a character. In this
+                     specification, all strings are encoded using UTF-8;
+                     so all char values represent UTF-8 encoding units.
+                     For details on the UTF-8 encoding, see reference
+                     [1].
+         uintX_t     An unsigned integer with X bits, X being any of the
+                     following values: 8, 16, 32, 64
+
+      It's assumed no automatic padding is applied to the structs,
+      meaning that for each struct, the size of the struct in memory is
+      equal to the sum of the sizes of all members:
+
+         struct teststruct { uint64_t a; uint8_t b; };
+         // sizeof(struct teststruct) must be equal to
+         // sizeof(uint64_t) + sizeof(uint8_t) which in this case equals
+         //        8         +        1        = 9k
 
       3.3.1. File header
 
@@ -262,10 +283,10 @@ Table of Contents
 
 4. References
 
-   [1] <...>
-
-   <TODO: add references, like the UTF-8 specification at
-   https://datatracker.ietf.org/doc/html/rfc3629>
+   [1] Francois Yergeau, "UTF-8, a transformation format of
+       ISO 10646" (RFC 2629), available at
+       https://datatracker.ietf.org/doc/html/rfc3629 (as HTML) and
+       https://www.ietf.org/rfc/rfc3629.txt (as raw ASCII)
 
 5. Source code
 
