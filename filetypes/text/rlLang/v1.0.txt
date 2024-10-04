@@ -172,17 +172,24 @@ Table of Contents
          The "cstm" (0x63 0x73 0x74 0x6D) optional custom data chunk
          contains custom string properties for main strings. These can
          be freely defined and are identified by their own unique
-         identifier strings, called "property identifier".
-         This chunk is special in that it's currently the only chunk
-         type that may appear in multiple chunks within a single file.
-         A single "cstm" chunk always defines a single custom property
-         and also contains the references to all associated values.
+         identifier strings, called "property identifier". It's
+         recommended to only use lowercase ASCII characters, digits and
+         underscores for property identifiers; however, this is not
+         required for a valid rlLang file. This chunk is special in that
+         it's currently the only chunk type that may appear in multiple
+         chunks within a single file. A single "cstm" chunk always
+         defines a single custom property and also contains the
+         references to all associated values.
 
          The "dir " (0x64 0x69 0x72 0x20) optional directory chunk
          contains a directory-like structure that the main strings can
          be sorted into. If this chunk is present, it must assign a
-         directory as well as a name unique within this directory to
-         each of the main strings.
+         directory as well as a name to each of the main strings. All
+         elements (texts and subdirectories) within a single directory
+         must have a name unique to this directory. A subdirectory
+         cannot have the same name as a file in that same directory.
+         However, the same element names can be reused in
+         subdirectories.
 
          The "id  " (0x69 0x64 0x20 0x20) optional ID string chunk
          contains assignments of ID strings for main strings. The same
@@ -262,56 +269,56 @@ Table of Contents
 
       3.3.1. File header
 
-         struct rl_lang_filehdr
+         typedef struct
          {
            char     sMagicNo[6]; // "rlLang"
            uint8_t  iVersion[2]; // file format version: 0x01 0x00
            uint64_t iFileSize;   // the total size of the file,
                                  // including this header, in bytes.
-         };
+         } rl_lang_filehdr;
 
       3.3.2. Chunk header
 
-         struct rl_lang_chunkheader
+         typedef struct
          {
            char     sChunkType[4]; // the chunk type identifier.
            uint64_t iChunkSize;    // the size of the chunk, in bytes,
                                    // excluding this header.
-         };
+         } rl_lang_chunkheader;
 
       3.3.3. "hdr " chunk
 
-         struct rl_lang_chunktype_hdr
+         typedef struct
          {
-           struct rl_lang_chunkheader oHeader; // the chunk header.
+           rl_lang_chunkheader oHeader; // the chunk header.
 
            char     sLang[2]; // ISO 639-1 language code, like "en" for
                               // english or "de" for german. See
                               // reference [2].
            uint64_t iCount;   // the count of main texts.
-         };
+         } rl_lang_chunktype_hdr;
 
       3.3.4. "data" chunk
 
-         struct rl_lang_chunktype_data
+         typedef struct
          {
-           struct rl_lang_chunkheader oHeader; // the chunk header.
+           rl_lang_chunkheader oHeader; // the chunk header.
 
            uint64_t iStringPtrs[]; // pointers to the main strings.
                                    // the size of this array is
                                    // defined in the "hdr " chunk.
-         };
+         } rl_lang_chunktype_data;
 
       3.3.5. "str " chunk
 
-         struct rl_lang_chunktype_str
+         typedef struct
          {
-           struct rl_lang_chunkheader oHeader; // the chunk header.
+           rl_lang_chunkheader oHeader; // the chunk header.
 
            char szStrings[][]; // a series of zero-terminated UTF-8
                                // strings. the same string shall not
                                // appear more than once.
-         };
+         } rl_lang_chunktype_str;
 
       3.3.6. "astr" chunk
 
@@ -319,27 +326,111 @@ Table of Contents
 
       3.3.7. "cstm" chunk
 
-         <...>
+         typedef struct
+         {
+           rl_lang_chunkheader oHeader; // the chunk header.
+
+           uint64_t iPropertyName; // pointer to the unique
+                                   // property name.
+           uint64_t iValueCount;   // the size of the oValues
+                                   // array.
+
+           rl_lang_cstm_entry oValues[]; // the actual values.
+         } rl_lang_chunktype_cstm;
+
+         typedef struct
+         {
+           uint64_t iText;  // ID of the main string. the same ID
+                            // cannot appear multiple times within the
+                            // same "cstm" chunk.
+           uint64_t iValue; // pointer to the property value string.
+         } rl_lang_cstm_entry;
 
       3.3.8. "dir " chunk
 
-         <...>
+         typedef struct
+         {
+           rl_lang_chunkheader oHeader; // the chunk header.
+
+           uint64_t          iDirCount; // the size of the oDirs array.
+           rl_lang_dir_entry oDirs[];   // directory definitions.
+
+           rl_lang_dir_text  oTexts[];  // data for each main string.
+         } rl_lang_chunktype_dir;
+
+         // the oTexts array has one entry for each main string. the
+         // index of an entry in the oTexts array is the ID of the
+         // associated main string.
+
+         typedef struct
+         {
+           uint64_t iDirName; // pointer to the name of the directory.
+           uint64_t iParent;  // the index of the parent directory.
+         } rl_lang_dir_entry;
+
+         // each entry in the oDirs table of the rl_lang_chunktype_dir
+         // struct can only reference a directory with a lower index, or
+         // the root directory.
+         // the value 0xFFFFFFFFFFFFFFFF (UINT64_MAX) is defined as the
+         // (unnamed) root directory, limiting iDirCount to a maximum of
+         // UINT64_MAX - 1.
+
+         typedef struct
+         {
+           uint64_t iTextName;  // the name of the text.
+           uint64_t iParentDir; // the index of the parent directory.
+         } rl_lang_dir_text;
 
       3.3.9. "id  " chunk
 
-         <...>
+         typedef struct
+         {
+           rl_lang_chunkheader oHeader; // the chunk header.
+
+           uint64_t         iCount; // the size of the oIDs array.
+           rl_lang_id_entry oIDs[]; // the ID strings.
+         } rl_lang_chunktype_id;
+
+         typedef struct
+         {
+           uint64_t iText;   // the ID of the main string.
+           uint64_t iTextID; // the string ID to be assigned to the main
+                             // string.
+         } rl_lang_id_entry;
+
+         // the main string IDs referenced in the oIDs array of the
+         // rl_lang_chunktype_id struct must always increase, meaning
+         // that the rl_lang_id_entry values are ordered by iText.
 
       3.3.10. "note" chunk
 
-         <...>
+         typedef struxt
+         {
+           rl_lang_chunkheader oHeader; // the chunk header.
+
+           uint64_t           iCount;   // the size of the oNotes array.
+           rl_lang_note_entry oNotes[]; // the actual note data.
+         } rl_lang_chunktype_note;
+
+         typedef struct
+         {
+           uint64_t iNote;      // pointer to the note text.
+           uint64_t iTextCount; // size of the iTexts array.
+           uint64_t iTexts[];   // IDs of the main strings this note is
+                                // linked to.
+         } rl_lang_note_entry;
+
+         // the main string IDs in the iTexts array must be in ascending
+         // order, each value in that array must be unique.
 
       3.3.11. "odat" chunk
 
-         <...>
+         // same as the "id  " chunk, except that the text ID stringss
+         // are now the original strings which also mustn't be unique.
 
       3.3.12. "tag " chunk
 
-         <...>
+         // same as the "note" chunk.
 
 
 4. References
