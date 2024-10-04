@@ -149,7 +149,8 @@ Table of Contents
          general information about the other critical chunks.
 
          The "str " (0x73 0x74 0x72 0x20) critical string chunk contains
-         all the main text strings that were or may get translated.
+         all the main text strings that were or may get translated. It
+         can't contain any unused or duplicate strings.
 
          The "data" (0x64 0x61 0x74 0x61) critical data chunk contains
          references to the main strings. The order of the references
