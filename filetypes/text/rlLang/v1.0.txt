@@ -1,7 +1,3 @@
-<NOTE: This is a work-in-progress specification. Links might be invalid
-and the technical details might change drastically without notice. Don't
-reference this specification yet.>
-
 Robin Lemanska                                              October 2024
 
 
@@ -444,8 +440,9 @@ Table of Contents
 
 5. Source code
 
-   <TODO: write an implementation of an rlLang decoder, and maybe an
-   editing tool>
+   Source code for a C++ static library for reading rlLang files as well
+   as miscellaneous tools for working with rlLang files is available at
+   https://rle.sh/git-repo/rlLang.
 
 6. Acknowledgements
 
