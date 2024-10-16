@@ -116,6 +116,9 @@ Table of Contents
    chunks may appear in any order. See section 3.1.2 for details on the
    chunk order.
 
+   There is no space between two consecutive chunks and the file must
+   end right after the last chunk.
+
 3. Detailed specification
 
    3.1. Chunks
